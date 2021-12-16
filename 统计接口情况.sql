@@ -4,9 +4,9 @@
 	2）需实现数
 	3）接口用例接口覆盖数
 字段说明：
-		sys_pro：系统项目   pro_module：项目模块
+	sys_pro：系统项目   pro_module：项目模块
        api_tags：接口模块     api_name：接口名称  api_method：接口方法  api_path：接口地址  api_status：接口状态
-	    autoQty：需实现数      hasCase：以实现数      apiQty：接口总数
+	autoQty：需实现数      hasCase：以实现数      apiQty：接口总数
 */
 
 /*查询接口用例中接口覆盖数，已经统计接口总数和需实现数*/
