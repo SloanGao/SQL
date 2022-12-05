@@ -2,7 +2,7 @@
 脚本功能：统计接口和场景用例
 字段说明：
 	 case_type：用例类型   sys_project：系统项目  opertation_time：操作日期
-	create_qty：新增用例数  create_qty：更新用例数
+	create_qty：新增用例数  update_qty：更新用例数
 */
 
 SELECT
@@ -22,11 +22,13 @@ JOIN (
 	IFNULL(c.create_qty, 0) AS create_qty, 
     IFNULL(u.update_qty, 0) AS update_qty
 	FROM (
+		/*查询新增接口用例*/
 		SELECT Project_id, api_definition_id, FROM_UNIXTIME(create_time/1000, '%Y-%m-%d') AS create_date, COUNT(1) create_qty 
 		FROM metersphere.api_test_case
 		WHERE status<>'Trash'
 		GROUP BY Project_id, api_definition_id, FROM_UNIXTIME(create_time/1000, '%Y-%m-%d')
 	) c LEFT JOIN (
+		/*查询更新接口用例*/
 		SELECT Project_id, api_definition_id, FROM_UNIXTIME(update_time/1000, '%Y-%m-%d') AS update_date, COUNT(1) update_qty 
 		FROM metersphere.api_test_case
 		WHERE status<>'Trash'
@@ -42,11 +44,13 @@ JOIN (
 		IFNULL(c.create_qty, 0) AS create_qty, 
         IFNULL(u.update_qty, 0) AS update_qty
 	FROM (
+		/*查询新增接口用例*/
 		SELECT Project_id, api_definition_id, FROM_UNIXTIME(create_time/1000, '%Y-%m-%d') AS create_date, COUNT(1) create_qty 
 		FROM metersphere.api_test_case
 		WHERE status<>'Trash'
 		GROUP BY Project_id, api_definition_id, FROM_UNIXTIME(create_time/1000, '%Y-%m-%d')
 	) c RIGHT JOIN (
+		/*查询更新接口用例*/
 		SELECT Project_id, api_definition_id, FROM_UNIXTIME(update_time/1000, '%Y-%m-%d') AS update_date, COUNT(1) update_qty 
 		FROM metersphere.api_test_case
 		WHERE status<>'Trash'
@@ -58,7 +62,7 @@ UNION ALL
 
 SELECT
 	'scenariocase' AS '用例类型',
-	CONCAT(p.name,'-',substring_index(substring_index(f.module_path,'/',2),'/',-1)) AS '业务系统-项目',
+	CONCAT(p.name,'-',substring_index(substring_index(f.module_path,'/',2),'/',-1)) AS '系统项目',
 	f.case_date AS '操作日期', 
     f.create_qty AS '新增用例数',
     f.update_qty AS '更新用例数'
@@ -72,11 +76,13 @@ JOIN (
 	IFNULL(c.create_qty, 0) AS create_qty, IFNULL(u.update_qty, 0) AS update_qty,
     IFNULL(c.module_path, u.module_path) AS module_path
 	FROM (
+		/*查询新增场景用例*/
 		SELECT project_id, api_scenario_module_id, module_path, FROM_UNIXTIME(create_time/1000, '%Y-%m-%d') AS create_date, COUNT(1) create_qty 
 		FROM metersphere.api_scenario
 		WHERE status<>'Trash'
 		GROUP BY project_id, api_scenario_module_id, module_path, FROM_UNIXTIME(create_time/1000, '%Y-%m-%d')
 	) c LEFT JOIN (
+		/*查询更新场景用例*/
 		SELECT project_id, api_scenario_module_id, module_path, FROM_UNIXTIME(update_time/1000, '%Y-%m-%d') AS update_date, COUNT(1) update_qty 
 		FROM metersphere.api_scenario
 		WHERE status<>'Trash'
@@ -93,11 +99,13 @@ JOIN (
         IFNULL(u.update_qty, 0) AS update_qty,
         IFNULL(c.module_path, u.module_path) AS module_path
 	FROM (
+		/*查询新增场景用例*/
 		SELECT project_id, api_scenario_module_id, module_path, FROM_UNIXTIME(create_time/1000, '%Y-%m-%d') AS create_date, COUNT(1) create_qty 
 		FROM metersphere.api_scenario
 		WHERE status<>'Trash'
 		GROUP BY project_id, api_scenario_module_id, module_path, FROM_UNIXTIME(create_time/1000, '%Y-%m-%d')
 	) c RIGHT JOIN (
+		/*查询更新场景用例*/
 		SELECT project_id, api_scenario_module_id, module_path, FROM_UNIXTIME(update_time/1000, '%Y-%m-%d') AS update_date, COUNT(1) update_qty 
 		FROM metersphere.api_scenario
 		WHERE status<>'Trash'
